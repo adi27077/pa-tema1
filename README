@@ -1,0 +1,92 @@
+MUSAT-BURCEA Adrian 322CB - PA Tema 1
+
+Problema 1
+    Rezolvare cu divide et impera
+    Impartim matricea in 4 cadrane in functie de coordonatele cerute
+        Cadranul 1: x si y mai mici ca size/2
+        Cadranul 2: x mai mic ca size/2 si y mai mare ca size/2
+                    micsoram y cu size/2
+        Cadranul 3: x mai mare ca size/2 si y mai mic ca size/2
+                    micsoram x cu size/2
+        Cadranul 4: x si y mai mari ca size/2
+                    micsoram si x si y cu size/2
+                    negam rezultatul de fiecare data cand trecem prin
+                    acest cadran in orice subproblema
+
+    Apelam recursiv pana cand ajungem la o matrice de 2x2, unde returnam
+    0 pt primele 3 cadrane si 1 pt al 4lea cadran
+
+    Complexitate temporala: O(k * log n), n dimensiunea matricei
+                                          k nr de perechi
+
+Problema 2
+    Rezolvare cu greedy
+    Parcurgem toate literele din alfabet care exista in cuvintele din lista
+    considerand de fiecare data litera curenta ca posibila litera dominanta.
+    Calculam dominanta literei curente pt toate cuvintele din sir, adica
+    diferenta dintre nr de aparitii al literei curente si nr de aparitii al
+    restului literelor. Sortam cuvintele descrescator dupa dominanta.
+    Parcurgem fiecare cuvant, verificand dominanta literei curente si daca ea
+    se pastreaza, numaram cuvantul. Deoarece cuvintele sunt sortate, atunci
+    cand litera curenta nu mai e dominanta, avem nr maxim de cuvinte pt
+    aceasta litera. Dupa ce am facut acesti pasi pt fiecare litera, luam
+    maximul dintre maximuri, care va fi rezultatul final.
+
+    Complexitate temporala: O(l), l suma lungimilor cuvintelor
+
+Problema 3
+    Rezolvare cu programare dinamica
+    Retin cel mai mare nr din lista de la citire. Calculez nr de operatii
+    doar pentru acel numar, deoarece rezultatele pentru toate nr mai mici
+    se vor afla in vectorul dp folosit.
+    dp[i] = nr de operatii pt a ajunge de la 1 la i. 
+    Pt calculareaza nr de operatii, avem cazurile de baza dp[1]=0 si dp[2]=1,
+    cazul general dp[i+d] = min(dp[i+d],dp[i]+1). i de la 2 la target, iar d 
+    divizor al lui i de la 1 la sqrt(i), pentru reducerea complexitatii si
+    calculand la acelasi pas dp[i+d] si dp[i+i/d], min pt ca dp este
+    initializat cu INT_MAX. Rezultatul final este in dp[target].
+    Dupa calcularea nr de operatii verific daca pot fi luate toate cuvintele,
+    caz in care raspunsul este pur si simplu suma punctelor. Altfel, avem
+    problema rucsac, unde fiecare obiect este nr, greutatea fiecarui obiect
+    este nr de operatii pt a ajunge la acel nr, greutatea maxima este nr maxim
+    de operatii si profitul fiecarui obiect este nr de puncte asociat. 
+    Rezolvarea pentru rucsac este cea din laborator.
+
+    Complexitate temporala: O(t * sqrt(t) + n*k), t numarul maxim din lista
+                                                  n nr de numere
+                                                  k nr maxim de operatii
+
+Problema 4
+    Rezolvare cu programare dinamica
+    Se numara de cate ori apare sirul ca subsecventa in cheie, parcurgand
+    fiecare caracter din cheie si fiecare caracter din sir. Cand dam de un ?
+    in cheie luam in calcul inlocuirea lui cu toate literele posibile (cele
+    care exista si in sir). avem un dp bidimensional initializat cu 0
+    dp[i][j] = nr de aparitii al stringului din primele j caracter din sir ca
+    subsecventa in stringul din primele i caractere din cheie. Caz de baza:
+    dp[i][0] = 1. Comparam de fiecare data ultimul caracter din ambele
+    stringuri (adica cele 2 caractere date de indicii de la pasul curent).
+    Daca sunt egale avem cazul general dp[i][j] = dp[i-1][j-1] + dp[i-1][j] pt
+    ca ne intereseaza si de cate ori s-a potrivit sirul de lungime j-1
+    in cheia de lungime i-1, dar si de cate ori s-a potrivit sirul curent
+    in cheia de lungime i-1. Daca cele doua caractere nu sunt egale avem
+    cazul general dp[i][j] = dp[i-1][j], adica nu numaram o aparitie noua
+    si avem pur si simplu rezultatul cu sirul curent in cheia de lungime i-1.
+    Deoarece rezultatul final e foarte mare, aplic la fiecare pas impartirea
+    modulo dupa reguli. Rezultatul final va fi dp[n][l]
+
+    Complexitate temporala: O(n*l*t), n lungimea cheii
+                                      l lungimea sirului
+                                      t nr de litere distincte din sir
+
+Referinte:
+    Idee sortare dupa dominanta (P2):
+        colegii de grupa
+    Idee gasire nr de operatii pt a ajunge de la 1 la target (P3):
+        https://www.geeksforgeeks.org/minimum-moves-to-make-m-and-n-equal-by-repeated-addition-of-divisors-except-1-set-2-dynamic-programming/
+    Idee verificare daca pot fi luate in considerare toate numerele (P3):
+        colegii de grupa
+    Rezolvare rucsac (P3):
+        https://ocw.cs.pub.ro/courses/pa/laboratoare/laborator-03
+    Idee gasire numar de aparitii al unui sir ca subsecventa in cheie (P4):
+        https://www.geeksforgeeks.org/find-number-times-string-occurs-given-string/
